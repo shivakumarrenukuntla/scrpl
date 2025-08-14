@@ -18,7 +18,7 @@ scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war ubuntu@172.31.8
          stage('conttesting')
          {
              git branch: 'main', url: 'https://github.com/shivakumarrenukuntla/FunctionalTesting.git'
-            sh 'java -jar /home/ubuntu/.jenkins/workspace/spl/testing.jar'
+            sh 'java -jar /home/ubuntu/.jenkins/workspace/spl_scm/testing.jar'
          }
          stage('contdelivery')
          {
