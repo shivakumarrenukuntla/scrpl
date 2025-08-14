@@ -1,30 +1,28 @@
-node('main')
+node('built-in') 
 {
-    stage('ContinuousDownload')
+    stage('cntdownload') 
     {
-         git branch: 'main', url: 'https://github.com/shivakumarrenukuntla/spl.git'
-
+    git branch: 'main', url: 'https://github.com/shivakumarrenukuntla/spl.git'
     }
-    stage('ContinuousBuild')
+        stage('contbuild')
     {
-         sh label: '', script: 'mvn package'
+        sh 'mvn package'
     }
-    stage('ContinuousDeployment')
-    {
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.81.88:/var/lib/tomcat8/webapps/testenv.war'
+        stage('contdeployment')
+        {
+            sh '''
+ssh ubuntu@172.31.81.88 "sudo mkdir -p /var/lib/tomcat10/webapps/"
+scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war ubuntu@172.31.81.88:/var/lib/tomcat10/webapps/testpg.war
+'''
+         }
+         stage('conttesting')
+         {
+             git 'https://github.com/shivakumarrenukuntla/FunctionalTesting.git'
+            sh 'java -jar /home/ubuntu/.jenkins/workspace/spl/testing.jar'
+         }
+         stage('contdelivery')
+         {
+             
+            sh 'scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war ubuntu@172.31.83.231:/var/lib/tomcat10/webapps/userpg.war'
+         }
     }
-    stage('ContinuousTesting')
-    {
-        git 'https://github.com/shivakumarrenukuntla/spl.git'
-        sh label: '', script: 'java -jar /home/ubuntu/.jenkins/workspace/ScriptedPipeline/testing.jar'
-    }
-     stage('ContinuousDelivery')
-    {
-        input message: 'Waiting for Approval from the DM', submitter: 'Srinivas'
-        sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war ubuntu@172.31.13.206:/var/lib/tomcat8/webapps/prodenv.war'
-    }
-
-
-}
-
-
