@@ -2,7 +2,8 @@ node('main')
 {
     stage('ContinuousDownload')
     {
-         git 'https://github.com/shivakumarrenukuntla/spl.git'
+         git branch: 'main', url: 'https://github.com/shivakumarrenukuntla/spl.git'
+
     }
     stage('ContinuousBuild')
     {
