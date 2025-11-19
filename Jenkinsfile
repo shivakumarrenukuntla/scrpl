@@ -8,16 +8,12 @@ node('built-in')
     {
         sh 'mvn package'
     }
-       stage('contdeployment') 
-    {
-            steps 
+        stage('contdeployment')
         {
-                sh '''
-                    ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.31.72.35 \
-                    "sudo mkdir -p /var/lib/tomcat10/webapps/"
-                '''
-            }
-        }
+            sh '''
+ssh root@172.31.72.35 "sudo mkdir -p /var/lib/tomcat10/webapps/"
+scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war root@172.31.72.35:/var/lib/tomcat10/webapps/testpg.war
+'''
          }
          stage('conttesting')
          {
@@ -27,6 +23,6 @@ node('built-in')
          stage('contdelivery')
          {
              
-            sh 'scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war root@172.31.72.35:/var/lib/tomcat9/webapps/userpg.war'
+            sh 'scp /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war root@172.31.72.35:/var/lib/tomcat10/webapps/userpg.war'
          }
     }
