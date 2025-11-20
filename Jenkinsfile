@@ -11,8 +11,8 @@ node('built-in') {
         // Use SSH private key in Jenkins credentials
         withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-ec2', keyFileVariable: 'SSH_KEY')]) {
             sh """
-                ssh -i $SSH_KEY -o StrictHostKeyChecking=no root@172.31.72.35 "sudo mkdir -p /var/lib/tomcat9/webapps/"
-                scp -i $SSH_KEY -o StrictHostKeyChecking=no /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war root@172.31.72.35:/var/lib/tomcat9/webapps/testpg.war
+                ssh -i $SSH_KEY -o StrictHostKeyChecking=no ec2-user@172.31.72.35 "sudo mkdir -p /var/lib/tomcat9/webapps/"
+                scp -i $SSH_KEY -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/shivapl/webapp/target/webapp.war ec2-user@172.31.72.35:/var/lib/tomcat9/webapps/testpg.war
             """
         }
     }
@@ -25,7 +25,7 @@ node('built-in') {
     stage('Delivery') {
         withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-ec2', keyFileVariable: 'SSH_KEY')]) {
             sh """
-                scp -i $SSH_KEY -o StrictHostKeyChecking=no /home/ubuntu/.jenkins/workspace/spl/webapp/target/webapp.war root@172.31.72.35:/var/lib/tomcat9/webapps/userpg.war
+                scp -i $SSH_KEY -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/shivapl/webapp/target/webapp.war ec2-user@172.31.72.35:/var/lib/tomcat9/webapps/userpg.war
             """
         }
     }
